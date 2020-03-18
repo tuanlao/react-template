@@ -1,17 +1,16 @@
 {
-  "name": "react-boilerplate",
+  "name": "react-template",
   "version": "4.0.0",
   "description": "A highly scalable, offline-first foundation with the best DX and a focus on performance and best practices",
   "repository": {
     "type": "git",
-    "url": "git://github.com/react-boilerplate/react-boilerplate.git"
+    "url": "git://github.com/tuanlao/react-template.git"
   },
   "engines": {
     "npm": ">=5",
     "node": ">=8.15.1"
   },
-  "author": "Max Stoiber",
-  "license": "MIT",
+  "author": "Tuan Lao Van",
   "scripts": {
     "analyze:clean": "rimraf stats.json",
     "preanalyze": "npm run analyze:clean",
@@ -65,7 +64,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "7.4.3",
-    "chalk": "2.4.2",
+    "chalk": "^2.4.2",
     "compression": "1.7.4",
     "connected-react-router": "6.4.0",
     "cross-env": "5.2.0",
@@ -126,8 +125,8 @@
     "eslint-plugin-jsx-a11y": "6.2.1",
     "eslint-plugin-prettier": "3.0.1",
     "eslint-plugin-react": "7.12.4",
-    "eslint-plugin-redux-saga": "1.0.0",
     "eslint-plugin-react-hooks": "1.6.0",
+    "eslint-plugin-redux-saga": "1.0.0",
     "file-loader": "3.0.1",
     "html-loader": "0.5.5",
     "html-webpack-plugin": "3.2.0",
@@ -148,7 +147,7 @@
     "react-test-renderer": "16.8.6",
     "react-testing-library": "6.1.2",
     "rimraf": "2.6.3",
-    "shelljs": "0.8.3",
+    "shelljs": "^0.8.3",
     "style-loader": "0.23.1",
     "stylelint": "10.0.1",
     "stylelint-config-recommended": "2.2.0",
