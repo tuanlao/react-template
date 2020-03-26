@@ -1,4 +1,4 @@
 {
-  "app.containers.HomePage.header": "This is the HomePage container!",
+  "app.containers.HomePage.header": "Đây là tiếng Việt!",
   "app.containers.NotFoundPage.header": "This is the NotFoundPage container!"
 }

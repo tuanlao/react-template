@@ -1,32 +1,18 @@
-/* eslint-disable no-restricted-syntax */
-/**
- * This script will extract the internationalization messages from all components
- * and package them in the translation json files in the translations file.
- */
-
+/* eslint-disable global-require, no-restricted-syntax, guard-for-in */
+require('@babel/polyfill');
 require('shelljs/global');
 
 const fs = require('fs');
 const nodeGlob = require('glob');
-const { transform } = require('@babel/core');
-const get = require('lodash/get');
+const path = require('path');
+
+const { appLocales } = require('i18n');
 
 const animateProgress = require('./helpers/progress');
 const addCheckmark = require('./helpers/checkmark');
 
-const { appLocales, DEFAULT_LOCALE } = require('../../app/i18n');
-
-const babel = require('../../babel.config.js');
-const { presets } = babel;
-let plugins = babel.plugins || [];
-
-plugins.push('react-intl');
-
-// NOTE: styled-components plugin is filtered out as it creates errors when used with transform
-plugins = plugins.filter(p => p !== 'styled-components');
-
 // Glob to match all js files except test files
-const FILES_TO_PARSE = 'app/**/!(*.test).js';
+const FILES_TO_PARSE = 'app/**/messages.js';
 
 const newLine = () => process.stdout.write('\n');
 
@@ -54,55 +40,21 @@ const glob = pattern =>
     );
   });
 
-const readFile = fileName =>
-  new Promise((resolve, reject) => {
-    fs.readFile(
-      fileName,
-      'utf8',
-      (error, value) => (error ? reject(error) : resolve(value)),
-    );
-  });
-
 // Store existing translations into memory
-const oldLocaleMappings = [];
 const localeMappings = [];
 
 // Loop to run once per locale
 for (const locale of appLocales) {
-  oldLocaleMappings[locale] = {};
   localeMappings[locale] = {};
-  // File to store translation messages into
-  const translationFileName = `app/translations/${locale}.json`;
-  try {
-    // Parse the old translation message JSON files
-    const messages = JSON.parse(fs.readFileSync(translationFileName));
-    const messageKeys = Object.keys(messages);
-    for (const messageKey of messageKeys) {
-      oldLocaleMappings[locale][messageKey] = messages[messageKey];
-    }
-  } catch (error) {
-    if (error.code !== 'ENOENT') {
-      process.stderr.write(
-        `There was an error loading this translation file: ${translationFileName}
-        \n${error}`,
-      );
-    }
-  }
 }
 
 const extractFromFile = async filename => {
   try {
-    const code = await readFile(filename);
-
-    const output = await transform(code, { filename, presets, plugins });
-    const messages = get(output, 'metadata.react-intl.messages', []);
-
-    for (const message of messages) {
+    const messages = require(path.resolve(filename)).default;
+    for (const key in messages) {
+      const message = messages[key];
       for (const locale of appLocales) {
-        const oldLocaleMapping = oldLocaleMappings[locale][message.id];
-        // Merge old translations into the babel extracted instances where react-intl is used
-        const newMsg = locale === DEFAULT_LOCALE ? message.defaultMessage : '';
-        localeMappings[locale][message.id] = oldLocaleMapping || newMsg;
+        localeMappings[locale][message.id] = message[locale] || message.defaultMessage;
       }
     }
   } catch (error) {

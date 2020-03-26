@@ -1,8 +1,3 @@
-/*
- *
- * LanguageProvider reducer
- *
- */
 import produce from 'immer';
 
 import { DEFAULT_LOCALE } from 'i18n';
